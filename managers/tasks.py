@@ -104,3 +104,8 @@ class TaskManager:
         self.tasks = [task for task in self.tasks if task.id != task_id]
         self.save_tasks()
         return f'Задача с id={task_id} была успешно удалена'
+
+    def filter_tasks(self, filter_by='priority', value="Высокий"):
+        return [
+            task for task in self.tasks if getattr(task, filter_by, None) == value
+        ]
