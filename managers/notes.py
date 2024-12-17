@@ -24,7 +24,7 @@ class Note:
 
 
 class NoteManager:
-    def __init__(self, notes_path='data/notes.json'):
+    def __init__(self, notes_path='../data/notes.json'):
         self.notes_path: str = notes_path
         self.notes = self.load_notes()
 
@@ -71,7 +71,7 @@ class NoteManager:
         return f'Заметка с id={note_id} была успешно удалена'
 
 
-note_1 = Note(1, 'My tasks', 'Сделать задачу')
-note_manager_1 = NoteManager(notes_path='data/notes.json')
-
+note_manager_1 = NoteManager(notes_path='../data/notes.json')
+note_manager_1.create_note('My tasks', 'Сделать задачу')
+note_manager_1.save_notes()
 print(note_manager_1.see_list_notes())
