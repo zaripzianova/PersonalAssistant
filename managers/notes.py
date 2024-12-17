@@ -17,23 +17,32 @@ class Note:
             "timestamp": self.timestamp
         }
 
-    def from_dict(self, data):
+    @staticmethod
+    def from_dict(data):
         note = Note(data['id'], data['title'], data['content'])
         note.timestamp = data['timestamp']
         return note
 
 
 class NoteManager:
-    def __init__(self, notes_path='../data/notes.json'):
+    def __init__(self, notes_path='data/notes.json'):
         self.notes_path: str = notes_path
         self.notes = self.load_notes()
 
     def load_notes(self):
         try:
             with open(self.notes_path, "r") as file:
-                return [note.from_dict() for note in json.load(file)]
+                data = json.load(file)
+                notes = []
+                for note_data in data:
+                    try:
+                        notes.append(Note.from_dict(note_data))
+                    except Exception as e:
+                        print(f"Ошибка при создании заметки из данных {note_data}: {e}")
+                return notes
         except (FileNotFoundError, json.JSONDecodeError):
-            return 'Ошибка при загрузке файла'
+            print("Ошибка при загрузке файла. Возвращается пустой список.")
+            return []
 
     def save_notes(self):
         with open(self.notes_path, "w") as file:
@@ -71,7 +80,3 @@ class NoteManager:
         return f'Заметка с id={note_id} была успешно удалена'
 
 
-note_manager_1 = NoteManager(notes_path='../data/notes.json')
-note_manager_1.create_note('My tasks', 'Сделать задачу')
-note_manager_1.save_notes()
-print(note_manager_1.see_list_notes())

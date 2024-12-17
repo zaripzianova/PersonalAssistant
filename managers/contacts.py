@@ -9,15 +9,17 @@ class Contact:
         self.phone: str = phone
         self.email: str = email
 
-    def to_dict(self, contact):
+    @staticmethod
+    def to_dict(self):
         return {
-            'id': contact.id,
-            'name': contact.name,
-            'phone': contact.phone,
-            'email': contact.email
+            'id': self.id,
+            'name': self.name,
+            'phone': self.phone,
+            'email': self.email
         }
 
-    def from_dict(self, contact_dict):
+    @staticmethod
+    def from_dict(contact_dict):
         contact = Contact(contact_dict['id'], contact_dict['name'], contact_dict['phone'], contact_dict['email'])
         return contact
 

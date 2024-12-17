@@ -21,7 +21,8 @@ class Task:
             'due_date': self.due_date
         }
 
-    def from_dict(self, task_dict):
+    @staticmethod
+    def from_dict(task_dict):
         return Task(task_dict['id'], task_dict['title'], task_dict['description'], task_dict['done'],
                     task_dict['priority'], task_dict['due_date'])
 
@@ -31,10 +32,17 @@ class TaskManager:
         self.tasks_path: str = tasks_path
         self.tasks = self.load_tasks()
 
+    def create_task(self, title, description, done, priority, due_date):
+        task_id = max((task.id for task in self.tasks), default=0) + 1
+        new_task = Task(task_id, title, description, done, priority, due_date)
+        self.tasks.append(new_task)
+        self.save_tasks()
+        return f'Заметка с id={task_id} была создана'
+
     def load_tasks(self):
         try:
             with open(self.tasks_path, 'r') as file:
-                return [task.from_dict() for task in json.load(file)]
+                return [Task.from_dict(task) for task in json.load(file)]
         except (FileNotFoundError, json.JSONDecodeError):
             return 'Ошибка при загрузке файла'
 
