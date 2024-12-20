@@ -9,7 +9,6 @@ class Contact:
         self.phone: str = phone
         self.email: str = email
 
-    @staticmethod
     def to_dict(self):
         return {
             'id': self.id,
@@ -24,25 +23,33 @@ class Contact:
         return contact
 
 class ContactManager:
-    def __init__(self, contacts_path='..data/contacts.json'):
+    def __init__(self, contacts_path='data/contacts.json'):
         self.contacts_path: str = contacts_path
         self.contacts = self.load_contacts()
 
     def load_contacts(self):
         try:
             with open(self.contacts_path, "r") as file:
-                return [contact.from_dict() for contact in json.load(file)]
+                data = json.load(file)
+                contacts = []
+                for contact_data in data:
+                    try:
+                        contacts.append(Contact.from_dict(contact_data))
+                    except Exception as e:
+                        print(f"Ошибка при создании словаря из данных {contact_data}: {e}")
+                return contacts
         except (FileNotFoundError, json.JSONDecodeError):
-            return 'Ошибка при загрузке файла'
+            print("Ошибка при загрузке файла. Возвращается пустой список.")
+            return []
 
     def save_contacts(self):
         with open(self.contacts_path, "w") as file:
-            json.dump([note.to_dict() for note in self.contacts], file, indent=4)
+            json.dump([contact.to_dict() for contact in self.contacts], file, indent=4, ensure_ascii=False)
 
     def create_contact(self, name, phone, email):
-        contact_id = max((contact.id for contact in self.contacts), default=0) + 1
-        new_note = Contact(contact_id, name, phone, email)
-        self.contacts.append(new_note)
+        contact_id = len(self.contacts) + 1
+        new_contact = Contact(contact_id, name, phone, email)
+        self.contacts.append(new_contact)
         self.save_contacts()
         return f'Контакт с id={contact_id} был создан'
 
