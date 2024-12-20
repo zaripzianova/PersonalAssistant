@@ -38,7 +38,7 @@ class NoteManager:
                     try:
                         notes.append(Note.from_dict(note_data))
                     except Exception as e:
-                        print(f"Ошибка при создании заметки из данных {note_data}: {e}")
+                        print(f"Ошибка при создании словаря из данных {note_data}: {e}")
                 return notes
         except (FileNotFoundError, json.JSONDecodeError):
             print("Ошибка при загрузке файла. Возвращается пустой список.")
@@ -46,10 +46,10 @@ class NoteManager:
 
     def save_notes(self):
         with open(self.notes_path, "w") as file:
-            json.dump([note.to_dict() for note in self.notes], file, indent=4)
+            json.dump([note.to_dict() for note in self.notes], file, indent=4, ensure_ascii=False)
 
     def create_note(self, title, content):
-        note_id = max((note.id for note in self.notes), default=0) + 1
+        note_id = len(self.notes) + 1
         new_note = Note(note_id, title, content)
         self.notes.append(new_note)
         self.save_notes()
