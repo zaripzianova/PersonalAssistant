@@ -33,7 +33,7 @@ class TaskManager:
         self.tasks = self.load_tasks()
 
     def create_task(self, title, description, done, priority, due_date):
-        task_id = max((task.id for task in self.tasks), default=0) + 1
+        task_id = len(self.tasks) + 1
         new_task = Task(task_id, title, description, done, priority, due_date)
         self.tasks.append(new_task)
         self.save_tasks()
@@ -48,7 +48,7 @@ class TaskManager:
 
     def save_tasks(self):
         with open(self.tasks_path, 'w') as file:
-            json.dump([task.to_dict() for task in self.tasks], file, indent=4)
+            json.dump([task.to_dict() for task in self.tasks], file, indent=4, ensure_ascii=False)
 
     def task_is_done(self, task_id):
         task = next((task for task in self.tasks if task.id == task_id), None)
