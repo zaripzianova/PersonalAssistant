@@ -3,11 +3,11 @@ import json
 
 class FinanceRecord:
     def __init__(self, record_id, category, amount, date, description=None):
-        self.id:int = record_id
-        self.amount:float = amount
-        self.category:str = category
-        self.date:str = date
-        self.description:str = description
+        self.id: int = record_id
+        self.amount: float = amount
+        self.category: str = category
+        self.date: str = date
+        self.description: str = description
 
     def to_dict(self):
         return {
@@ -37,10 +37,10 @@ class FinanceManager:
 
     def save_records(self):
         with open(self.storage_file, "w") as file:
-            json.dump([record.to_dict() for record in self.records], file, indent=4)
+            json.dump([record.to_dict() for record in self.records], file, indent=4, ensure_ascii=False)
 
     def create_record(self, category, amount, date, description=None):
-        record_id = max((record.id for record in self.records), default=0) + 1
+        record_id = len(self.records) + 1
         new_record = FinanceRecord(record_id, category, amount, date, description)
         self.records.append(new_record)
         self.save_records()
