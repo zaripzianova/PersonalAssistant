@@ -143,7 +143,7 @@ def finance_menu():
             amount = input("Введите размер операции: ")
             date = input("Введите дату операции: ")
             description = input("Введите описание операции: ")
-            print(manager.create_record(category, amount, date, description=None))
+            print(manager.create_record(category, amount, date, description))
         elif choice == "2":
             for contact in manager.list_records():
                 print(f"Category: {contact.category}, Amount: {contact.amount}, Date: {contact.date}, Description: {contact.description}")
